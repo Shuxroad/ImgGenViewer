@@ -11,7 +11,7 @@ router.get('/', async function(req, res, next) {
   console.log("GET");
   console.log(req.query);
 
-  res.render('index', { img: "test" });
+  res.render('index', { text: "Input Prompt:" });
 });
 
 
