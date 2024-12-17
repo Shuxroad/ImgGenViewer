@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello from Render!</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+      setTimeout(() => {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          disableForReducedMotion: true
+        });
+      }, 500);
+    </script>
+    <style>
+      @import url("https://p.typekit.net/p.css?s=1&k=vnd5zic&ht=tk&f=39475.39476.39477.39478.39479.39480.39481.39482&a=18673890&app=typekit&e=css");
+      @font-face {
+        font-family: "neo-sans";
+        src: url("https://use.typekit.net/af/00ac0a/00000000000000003b9b2033/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("woff2"), url("https://use.typekit.net/af/00ac0a/00000000000000003b9b2033/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("woff"), url("https://use.typekit.net/af/00ac0a/00000000000000003b9b2033/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("opentype");
+        font-style: normal;
+        font-weight: 700;
+      }
+      html {
+        font-family: neo-sans;
+        font-weight: 700;
+        font-size: calc(62rem / 16);  
+      }
+      body {
+        background: white;
+      }
+      section {
+        margin: 60 20;
+        border-radius: 1em;
+        padding: 1em;
+      }
+      #prompt{
+        width: 100%;
+        height: 40px;
+        font-size: 20px;
+        padding: 20px;
+      }
+      #genButton{
+        height: 40px;
+        font-size: 20px;
+        padding: 8px 20px;
+      }
+      #createImg{
+        display: none;
+        margin-top: 40px;
+        width:256px;
+        height:256px;
+      }
+
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+
+      .spinner {
+        display: none;
+        width: 50px;
+        height: 50px;
+        border: 5px solid lightgrey;
+        border-top: 5px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        position: fixed;
+        top: 45%;
+        left: 45%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }      
+    </style>
+  </head>
+  <body>
+    <section>
+      Hello!!!
+      <div>
+        <label>Input Prompt: <%= img %></label>
+      </div>
+
+      <input id="prompt" type="text" value="" /><BR>
+      <input type="hidden" id="base64Image" value="" />
+      <button type="button" id="genButton" onclick="sendPrompt()" />Generate image</button>
+      <BR>
+      <img id="createImg" src="" >
+      <div id="overlay" class="overlay"></div>
+      <div id="spinner" class="spinner"></div>
+    </section>
+
+    <script>
+      function sendPrompt(){
+        document.getElementById('spinner').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+        let prompt = document.getElementById('prompt').value;
+          
+        const obj = {"prompt" : prompt};
+        const method = "POST";
+        const body = Object.keys(obj).map((key)=>key+"="+encodeURIComponent(obj[key])).join("&");
+        const headers = {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        };
+        const url = "https://wallaby-more-pony.ngrok-free.app"
+        
+        fetch(url, 
+          {method, headers, body})
+          .then( (res) => res.text() )
+          .then((text) => {
+            document.getElementById('createImg').src = text;
+            document.getElementById('createImg').style.display = 'block';
+            document.getElementById('base64Image').value = text;
+          })
+          .catch(error=>{
+            console.log(error);
+          }).finally(() =>{
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+          });
+      }
+      
+      </script>
+
+  </body>
+</html>

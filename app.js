@@ -1,8 +1,18 @@
 const express = require("express");
+
 const app = express();
 const port = process.env.PORT || 3001;
+var path = require('path');
+var indexRouter = require('./routes/index');
 
-app.get("/", (req, res) => res.type('html').send(html));
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+app.use('/', indexRouter);
+
+
+// app.get("/", (req, res) => res.type('html').send(html));
 
 const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
@@ -59,3 +69,4 @@ const html = `
   </body>
 </html>
 `
+module.exports = app;
